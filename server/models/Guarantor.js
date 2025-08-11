@@ -4,7 +4,7 @@ const {Schema} = mongoose;
 const guarantorSchema = new Schema(
 {
     name: {type: String, required:true},
-    id: {type: mongoose.Schema.Types.ObjectId , ref: "Users" }, // reference to user
+    user: {type: mongoose.Schema.Types.ObjectId , ref: "Users" }, // reference to user
     cnic: {type: String, required:true, unique:true},
     email: {type: String, required:true, unique:true},
     address: {type: String} 

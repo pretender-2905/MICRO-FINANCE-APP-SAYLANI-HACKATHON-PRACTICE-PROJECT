@@ -26,7 +26,7 @@ const registerSchema = Joi.object({
     cnic: Joi.string().length(15).required(),
     email: Joi.string().email().required(),
     address: Joi.string(),
-    phoneNumber: Joi.number(),
+    phoneNumber: Joi.string(),
 });
 
 

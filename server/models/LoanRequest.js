@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const {Schema} = mongoose;
 const LoanRequestSchema = new Schema(
 {
-    id: {type: mongoose.Schema.Types.ObjectId , ref: "Users" }, // reference to user
+    user: {type: mongoose.Schema.Types.ObjectId , ref: "Users" }, // reference to user
     category: {type: String, required:true},
     subcategory : {type: String},
     amount : {type: Number, required:true},
