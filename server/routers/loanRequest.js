@@ -82,7 +82,7 @@ router.get("/:userId/loans", authenticateUser, async (req,res)=>{
         }
          sendResponse(res, 200, loanRequests, false, "Loan requests fetched successfully!");
    }catch(error){
-     console.error("Error fetching user loans:", error);
+     console.error("Error while fetching user loans:", error);
         sendResponse(res, 500, null, true, "Something went wrong while fetching user loans");
    }
 })
