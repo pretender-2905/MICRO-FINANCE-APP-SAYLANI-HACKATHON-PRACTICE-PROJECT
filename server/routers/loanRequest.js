@@ -18,6 +18,12 @@ export const guarantorSchema = Joi.object({
     email: Joi.string().email().required(),
     address: Joi.string(),
 });
+// export const getLoanRequestSchema = Joi.object({
+
+//     cnic: Joi.string().length(15).required(),
+//     email: Joi.string().email().required(),
+//     address: Joi.string(),
+// });
 
 router.post("/", authenticateUser, async (req, res) => {
     try {
@@ -40,8 +46,8 @@ router.post("/", authenticateUser, async (req, res) => {
 })
 
 router.post("/guarantors", authenticateUser, async (req, res) => {
-    try{
-        const {error} = guarantorSchema.validate(req.body)
+    try {
+        const { error } = guarantorSchema.validate(req.body)
         if (error) return sendResponse(res, 400, null, true, error.message)
         const userId = req.user._id
         const guarantor = new Guarantor({
@@ -51,15 +57,52 @@ router.post("/guarantors", authenticateUser, async (req, res) => {
         await guarantor.save()
 
         await LoanRequest.findOneAndUpdate(
-            {user: userId},
-            {$push : {guarantors: guarantor._id}},
-            {new: true}
+            { user: userId },
+            { $push: { guarantors: guarantor._id } },
+            { new: true }
         )
         sendResponse(res, 201, guarantor, false, "Guarantor added successfully!")
-    }catch(error){
+    } catch (error) {
         console.log("error while adding guarantor! ", error)
         sendResponse(res, 500, null, true, "Something went wrong while adding guarantors")
     }
 })
+
+router.get("/:userId/loans", authenticateUser, async (req,res)=>{
+   try{
+     const {userId} = req.params
+
+    if( req.user.role !== "admin" && req.user._id.toString() !== userId){
+         return sendResponse(res, 403, null, true, "Not authorized to view these loan requests");
+    }
+
+    const loanRequests = await LoanRequest.find({user : userId}).populate("guarantors")
+      if (!loanRequests || loanRequests.length === 0) {
+            return sendResponse(res, 404, null, true, "No loan requests found for this user");
+        }
+         sendResponse(res, 200, loanRequests, false, "Loan requests fetched successfully!");
+   }catch(error){
+     console.error("Error fetching user loans:", error);
+        sendResponse(res, 500, null, true, "Something went wrong while fetching user loans");
+   }
+})
+
+router.get("/:id", authenticateUser, async (req, res) => {
+    try {
+        const { id } = req.params
+        const loanRequest = await LoanRequest.findById(id).populate('guarantors')
+        if (!loanRequest) {
+            sendResponse(res, 400, null, true, "Loan Request not found!")
+        }
+          if (req.user.role !== "admin" && loanRequest.user.toString() !== req.user._id.toString()) {
+            return sendResponse(res, 403, null, true, "Not authorized to view this loan request");
+        }
+        sendResponse(res, 200, loanRequest, false, "Loan Request fetched successfully")
+    } catch (error) {
+         console.log("error while fetching loan Request! ", error)
+        sendResponse(res, 500, null, true, "Something went wrong while fetching Loan Request")
+    }
+})
+
 
 export default router
