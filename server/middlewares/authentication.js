@@ -25,3 +25,17 @@ console.log("token", token)
      return sendResponse(res, 500, null, false, "Something went wrong while authenticating user / admin ")
    }
 }
+
+export async function authenticateAdmin(req,res,next){
+  const bearerToken = req.headers.authorization
+  if(!bearerToken) return sendResponse(res, 404, null, true, "Token not found")
+  const token = bearerToken.split(" ")[1]
+
+const decoded = jwt.verify(token, process.env.AUTH_SECRET)
+req.user = decoded
+if(decoded.role == "admin"){
+  next()
+}else{
+   return sendResponse(res, 403, null, true, "ONLY ADMINS ARE ALLOWED TO ACCESS!" )
+}
+}

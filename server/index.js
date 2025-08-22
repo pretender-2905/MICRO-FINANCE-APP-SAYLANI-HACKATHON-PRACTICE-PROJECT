@@ -6,6 +6,7 @@ import 'dotenv/config'
 import usersRoutes from '../server/routers/user.js'
 import loanRequestRoutes from './routers/loanRequest.js'
 import newAppointmentRoutes from './routers/newAppointment.js'
+import adminRoutes from './routers/admin.js'
 
 const PORT = 4000
 const app = express()
@@ -25,5 +26,6 @@ app.get("/", (req,res)=>{
 app.use("/user", usersRoutes)
 app.use("/loanRequest", loanRequestRoutes)
 app.use("/newAppointment", newAppointmentRoutes )
+app.use("/admin", adminRoutes )
 
 app.listen(PORT, ()=> console.log(`The server is running on ${PORT}`))
