@@ -47,7 +47,7 @@ router.post("/applications/:id/token", authenticateAdmin, async (req,res)=>{
     const qrData = `${process.env.BASE_URL || "http://localhost:5000"}/verify/${newToken}`;
     const qrCodeData = await QRCode.toDataURL(qrData);
 
-    const updated = await Appointment.findByIdAndUpdate(req.params, 
+    const updated = await Appointment.findByIdAndUpdate(req.params.id, 
         {tokenNumber: newToken,
          qrCodeData: qrCodeData
         },
