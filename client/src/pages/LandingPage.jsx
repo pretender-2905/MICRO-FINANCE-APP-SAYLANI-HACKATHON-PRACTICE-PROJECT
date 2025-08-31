@@ -108,7 +108,7 @@ function LandingPage() {
           <p>mart funding solutions to kickstart and grow your entrepreneurial journey.</p>
         </div>
 
-        <div className="cards-container">
+        <div className="cards-container cards-grid">
 
           <Cards
             type={"New Business Loans"}
