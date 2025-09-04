@@ -47,6 +47,8 @@ function LandingPage() {
           <Cards
             type={"NIKAH"}
             description={"Sacred marriage ceremony uniting two souls in holy matrimony forever"}
+            period='2 years'
+            maxLimit='10 lakhs'
           />
           <Cards
             type={"JAHEZ"}

@@ -14,6 +14,11 @@ function Cards({ type = 'CARD', description = '', period = '-', maxLimit = '-' }
   const educationSubCategory = ['Undergraduate & Graduate Loans', 'Abroad Study Loans', 'Professional & Career Loans']
   const homeConstructionCategory = ['Plot Purchase & Construction Loans', 'Self-Construction Loans', 'Home Renovation & Extension Loans']
   const businessStartupCategory = ['New Business Loans', 'Equipment & Infrastructure Loans', 'Working Capital Loans']
+  const [loanAmount, setLoanAmount] = useState()
+  const [loanPeriod, setLoanPeriod] = useState()
+  const [initialAmount, setInitialAmount] = useState()
+  const [monthlyInstallment, setMonthlyInstallment] = useState()
+  const [estimatedLoan, setEstimatedLoan] = useState()
   useEffect(() => {
     const t = setTimeout(() => setIsVisible(true), 100);
     return () => clearTimeout(t);
@@ -30,6 +35,21 @@ function Cards({ type = 'CARD', description = '', period = '-', maxLimit = '-' }
   // Normalize type for gradient class
   const gradientClass = (type || '').toString().toUpperCase();
 
+
+  // handleCalculateLoanButton function*
+
+  const handleCalculateLoanButton = ()=>{
+    const initialAmount = 0.25 * loanAmount
+    const estimatedLoan = (loanAmount - initialAmount) + 0.15 * loanAmount
+    const monthlyInstallment = (estimatedLoan / loanPeriod)
+    setInitialAmount(initialAmount)
+    setMonthlyInstallment(monthlyInstallment)
+    setEstimatedLoan(estimatedLoan)
+    console.log("initialAmount=>" , initialAmount + " Rs")
+    console.log("estimatedLoan=> ", estimatedLoan + " Rs")
+    console.log("monthly installment=> ", monthlyInstallment + " Rs")
+
+  }
   return (
     <StyledWrapper className={isVisible ? 'visible' : ''}>
       <div className="card">
@@ -119,10 +139,12 @@ function Cards({ type = 'CARD', description = '', period = '-', maxLimit = '-' }
               <button className="close" onClick={() => setIsCalcOpen(false)} aria-label="Close">×</button>
             </div>
             <div className="modal-body">
-              <p>This is a placeholder popup. Add your calculator fields and logic here later.</p>
-              <div className="placeholder-grid">
+              <p>Fill the details to calculate Loan</p>
+              <div className="flex flex-row gap-4">
 
-                <select name="Select Loan Category" required onChange={(e) => changeSelectedCategory(e.target.value)}>
+                <select 
+                  className='border border-blue-600 bg-blue-100 p-2 px-4 rounded-md'
+                name="Select Loan Category" required onChange={(e) => changeSelectedCategory(e.target.value)}>
                   <option value="" disabled selected>
                     Select Category
                   </option>
@@ -133,7 +155,9 @@ function Cards({ type = 'CARD', description = '', period = '-', maxLimit = '-' }
                   ))}
                 </select>
 
-                <select name="Select Loan SubCategory" required onChange={(e) => changeSelectedSubCategory(e.target.value)}>
+                <select 
+                  className='border border-blue-600 bg-blue-100 p-2 px-4 rounded-md'
+                name="Select Loan SubCategory" required onChange={(e) => changeSelectedSubCategory(e.target.value)}>
                    <option value="" disabled selected>
                     Select Sub Category
                   </option>
@@ -171,11 +195,46 @@ function Cards({ type = 'CARD', description = '', period = '-', maxLimit = '-' }
                   }
 
                 </select>
+                </div>
+
+                    <div className='flex gap-5 mt-3'>
+                  <input 
+                  className='border border-blue-600 bg-blue-100 p-2 px-4 rounded-md'
+                  onChange={(e)=> setLoanAmount(e.target.value)}
+                  type="number" placeholder='Enter Loan Amount' required />
+
+                  
+                </div>
+                
+
+                <div className='flex gap-5 mt-3'>
+                  <input 
+                  className='border border-blue-600 bg-blue-100 p-2 w-full rounded-md'
+                  onChange={(e)=> setLoanPeriod(e.target.value)}
+                  type="number"  required placeholder="Enter Period in months eg: 18" />
+                </div>
+                <div>
+                  <button 
+                  onClick={handleCalculateLoanButton}
+                   className='border border-blue-600 bg-purple-900 p-2 w-full rounded-md text-white mt-3'
+                  >
+                    Calculate Loan
+                  </button>
+                </div>
+
+                <div>
+                    <h1>
+        initial amount: {initialAmount}
+        estimated loan: {estimatedLoan}
+        monthly installment: {monthlyInstallment}
+      </h1>
+                </div>
+
                 {console.log("category=> ", selectedCategory)}
                 {console.log("Sub category=> ", selectedSubCategory)}
-                <div className="field" />
-                <div className="field" />
-              </div>
+                {console.log("Loan Amount=> ", loanAmount)}
+                {console.log("Loan Period=> ", loanPeriod + " months")}
+              
             </div>
             <div className="modal-footer">
               <button className="modal-btn" onClick={() => setIsCalcOpen(false)}>Close</button>
