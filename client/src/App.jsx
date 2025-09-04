@@ -16,7 +16,7 @@ function App() {
 return(
 
   <BrowserRouter>
-  <Headers />
+  {/* <Headers /> */}
   <Routes>
     <Route path="/"  element={<LandingPage />}/>
     <Route path="/login"  element={<Login />}/>

@@ -47,16 +47,20 @@ function LandingPage() {
           <Cards
             type={"NIKAH"}
             description={"Sacred marriage ceremony uniting two souls in holy matrimony forever"}
-            period='2 years'
+            period='36 Months'
             maxLimit='10 lakhs'
           />
           <Cards
             type={"JAHEZ"}
             description={"Traditional gifts and dowry preparations for the bride's new household"}
+            period='60 Months'
+            maxLimit='20 lakhs'
           />
           <Cards
             type={"VALIMA"}
             description={"Grand reception feast hosted by the groom's family celebrating marriage"}
+            period='60 Months'
+            maxLimit='15 lakhs'
           />
         </div>
       </div>
@@ -71,14 +75,20 @@ function LandingPage() {
           <Cards
             type={"Undergraduate &  Graduate Loans"}
             description={"Affordable student loans to support your higher education journey."}
+             period='60 Months'
+            maxLimit='50 lakhs'
           />
           <Cards
             type={"Abroad Study Loans"}
             description={"Tailored financing to pursue studies at international universities."}
+             period='84 Months'
+            maxLimit='1 Crore'
           />
           <Cards
             type={"Professional & Career Loans"}
             description={"Flexible loans to upskill, advance your career, or pursue professional courses."}
+             period='60 Months'
+            maxLimit='50 lakhs'
           />
         </div>
       </div>
@@ -93,14 +103,20 @@ function LandingPage() {
           <Cards
             type={"Plot Purchase & Construction Loans"}
             description={"Finance to buy land and build your dream home from scratch."}
+             period='84 Months'
+            maxLimit='1 Crore'
           />
           <Cards
             type={"Self-Construction Loans"}
             description={"Funds to construct a new house on your existing owned plot."}
+             period='84 Months'
+            maxLimit='1 Crore'
           />
           <Cards
             type={"Home Renovation & Extension Loans"}
             description={"Easy financing for upgrading, remodeling, or expanding your current home."}
+             period='60 Months'
+            maxLimit='50 lakhs'
           />
         </div>
       </div>
@@ -115,14 +131,20 @@ function LandingPage() {
           <Cards
             type={"New Business Loans"}
             description={"Capital support to launch your startup from idea to reality."}
-          />
-          <Cards
-            type={"Equipment & Infrastructure Loans"}
-            description={"Financing to purchase machinery, technology, or set up office/workspace."}
+             period='60 Months'
+            maxLimit='50 lakhs'
           />
           <Cards
             type={"Working Capital Loans"}
             description={"Short-term funding to manage daily operations and cash flow needs."}
+             period='60 Months'
+            maxLimit='50 lakhs'
+          />
+           <Cards
+            type={"Equipment & Infrastructure Loans"}
+            description={"Financing to purchase machinery, technology, or set up office/workspace."}
+             period='60 Months'
+            maxLimit='50 lakhs'
           />
         </div>
       </div>

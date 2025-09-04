@@ -1,10 +1,9 @@
-function SignUp(){
-    return(
-               <div className="text-center text-9xl text-green-600">
-
-            SignUp
-        </div>
-    )
+function SignUp() {
+  return (
+    <div className="flex justify-center items-center  text-8xl text-red-600 h-screen">
+      SignUp
+    </div>
+  )
 }
 
 export default SignUp
