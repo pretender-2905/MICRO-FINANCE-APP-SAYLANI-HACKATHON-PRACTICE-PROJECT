@@ -18,12 +18,7 @@ export const guarantorSchema = Joi.object({
     email: Joi.string().email().required(),
     address: Joi.string(),
 });
-// export const getLoanRequestSchema = Joi.object({
 
-//     cnic: Joi.string().length(15).required(),
-//     email: Joi.string().email().required(),
-//     address: Joi.string(),
-// });
 
 router.post("/", authenticateUser, async (req, res) => {
     try {

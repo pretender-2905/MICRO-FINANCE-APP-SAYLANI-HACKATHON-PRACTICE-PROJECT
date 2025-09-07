@@ -1,18 +1,15 @@
-
 import React, { useContext, useState } from "react";
 import {
   Button,
-  TextField,
-  InputAdornment,
   Stack,
   FormControl,
   InputLabel,
   OutlinedInput,
+  InputAdornment,
   IconButton,
   Box,
 } from "@mui/material";
 
-import BadgeIcon from "@mui/icons-material/Badge";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import axios from "axios";
@@ -21,15 +18,15 @@ import { useNavigate } from "react-router";
 import Cookies from "js-cookie";
 import { AuthContext } from "../context/AuthContext";
 
-export default function Login() {
-  const {user, setUser} = useContext(AuthContext)
+export default function ChangePassword() {
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    cnic: "",
-    password: "",
+    oldPassword: "",
+    newPassword: "",
   });
-  const [loading, setLoading] = React.useState(false);
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -40,14 +37,23 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await axios.post(AppRoutes.signIn, formData);
-      console.log("Success:", res.data);
-      Cookies.set("token", res?.data?.data?.token)
-      setUser(res?.data?.data?.user)
-      console.log(user)
-      console.log("token=>". token)
+      const token = Cookies.get("token"); // get token from cookie
+      const res = await axios.put(
+        AppRoutes.changePassword,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // send token for auth
+          },
+        }
+      );
+
+      console.log("Password changed successfully:", res.data);
+      alert("Password updated!");
+      navigate("/UserDashboard");
     } catch (err) {
       console.error("Error:", err.response?.data || err.message);
+      alert("Failed to change password");
     } finally {
       setLoading(false);
     }
@@ -59,8 +65,8 @@ export default function Login() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "100vh", // full screen height
-        p: 2, // padding for small screens
+        minHeight: "100vh",
+        p: 2,
         boxSizing: "border-box",
       }}
     >
@@ -68,31 +74,17 @@ export default function Login() {
         onSubmit={handleSubmit}
         style={{
           maxWidth: 400,
-          width: "100%", // responsive on mobile
+          width: "100%",
         }}
       >
         <Stack spacing={2}>
-          <TextField
-            label="CNIC"
-            name="cnic"
-            value={formData.cnic}
-            onChange={handleChange}
-            fullWidth
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <BadgeIcon fontSize="small" />
-                </InputAdornment>
-              ),
-            }}
-          />
-
+          {/* Old Password */}
           <FormControl fullWidth variant="outlined">
-            <InputLabel>Password</InputLabel>
+            <InputLabel>Old Password</InputLabel>
             <OutlinedInput
-              name="password"
+              name="oldPassword"
               type={showPassword ? "text" : "password"}
-              value={formData.password}
+              value={formData.oldPassword}
               onChange={handleChange}
               endAdornment={
                 <InputAdornment position="end">
@@ -104,24 +96,48 @@ export default function Login() {
                   </IconButton>
                 </InputAdornment>
               }
-              label="Password"
+              label="Old Password"
             />
           </FormControl>
 
+          {/* New Password */}
+          <FormControl fullWidth variant="outlined">
+            <InputLabel>New Password</InputLabel>
+            <OutlinedInput
+              name="newPassword"
+              type={showPassword ? "text" : "password"}
+              value={formData.newPassword}
+              onChange={handleChange}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword((s) => !s)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="New Password"
+            />
+          </FormControl>
+
+          {/* Buttons */}
           <Button
             type="submit"
             variant="contained"
             disabled={loading}
-            color="primary"
+            sx={{ backgroundColor: "#6b6ed3" }}
           >
-            {loading ? "Signing In..." : "Sign In"}
+            {loading ? "Changing Password..." : "Change Password"}
           </Button>
+
           <Button
-            onClick={() => navigate("/SignUp")}
-            variant="contained"
-            color="primary"
+            onClick={() => navigate("/UserDashboard")}
+            variant="outlined"
+            sx={{ borderColor: "#6b6ed3", color: "#6b6ed3" }}
           >
-            Sign Up
+            Back to User Dashboard
           </Button>
         </Stack>
       </form>

@@ -81,6 +81,7 @@ router.post('/register', async (req, res) => {
         sendResponse(res, 201, null, false, "User registered successfully and password has been sent to your G-mail")
 
     } catch (error) {
+        console.log("error from register=> ", error)
       return  sendResponse(res, 500, null, true, "Something went wrong while reistering user!")
     }
 })
@@ -128,6 +129,19 @@ res.send("Password changed successfully!")
     console.log("error=> from login", error)
     return sendResponse(res, 500, null, true, "Something went wrong while changing password!")
    }
+
+})
+
+// getmyInfo
+
+router.get("/myInfo", authenticateUser, async (req,res)=>{
+    try{
+        const user = await User.findOne({_id: req.user._id})
+    sendResponse(res, 200, user, false, "User data fetched successfully")
+    }catch(error){
+        console.log("error from myInfo api in user file=> ", error)
+        sendResponse(res, 500, null, true, "Something went wrong while getting user info!")
+    }
 
 })
 
