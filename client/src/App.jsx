@@ -10,6 +10,8 @@ import UserDashboard from "./pages/UserDashboard";
 import { AuthContext } from "./context/AuthContext";
 import Cookies from "js-cookie";
 import ChangePassword from "./pages/ChangePassword";
+import LoanRequestForm from "./pages/LoanRequestForm";
+import Slip from "./pages/Slip";
 
 
 
@@ -30,6 +32,8 @@ return(
     <Route path="/AdminDashboard"  element={<AdminDashboard />}/>
     <Route path="/UserDashboard"  element={<UserDashboard />}/>
     <Route path="/ChangePassword"  element={<ChangePassword />}/>
+    <Route path="/LoanRequestForm" element={<LoanRequestForm />}/>
+    <Route path="/Slip" element={<Slip />}/>
   </Routes>
  </>
 )
