@@ -62,7 +62,7 @@ const theme = createTheme({
 });
 
 const LoanRequestForm = () => {
-  const [popupOpen, setPopupOpen] = useState(false); 
+  const [popupOpen, setPopupOpen] = useState(false);
   // User info state
   const [userInfo, setUserInfo] = useState({
     name: '',
@@ -179,79 +179,79 @@ const LoanRequestForm = () => {
 
 
   // Handle form submission
- const handleSubmitLoanRequest = async (event) => {
-  event.preventDefault();
+  const handleSubmitLoanRequest = async (event) => {
+    event.preventDefault();
 
-  if (!validateForm()) {
-    setAlert({
-      open: true,
-      message: 'Please fix the errors in the form',
-      severity: 'error'
-    });
-    return;
-  }
-
-  setLoading(true);
-
-  try {
-    const token = Cookies.get("token");
-
-    // ✅ Backend-compatible payload
-    const payload = {
-      category: userInfo.category,
-      subcategory: userInfo.subCategory, // match backend schema
-      amount: Number(userInfo.amount),
-      period: Number(userInfo.loanPeriod), // match backend schema
-    };
-
-    // ✅ Submit loan request
-    const res = await axios.post(AppRoutes.loanRequest, payload, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-
-    // ✅ Submit guarantors
-    for (const g of guarantors) {
-      await axios.post(AppRoutes.guarantors, g, {
-        headers: { Authorization: `Bearer ${token}` }
+    if (!validateForm()) {
+      setAlert({
+        open: true,
+        message: 'Please fix the errors in the form',
+        severity: 'error'
       });
+      return;
     }
 
-  
+    setLoading(true);
 
-    // Show success message
-    setAlert({
-      open: true,
-      message: 'Loan request submitted successfully!',
-      severity: 'success'
-    });
+    try {
+      const token = Cookies.get("token");
 
-    // Reset form
-    setUserInfo({
-      name: '',
-      cnic: '',
-      category: '',
-      subCategory: '',
-      loanPeriod: '',
-      amount: '',
-    });
-    setGuarantors([
-      { name: '', email: '', cnic: '', address: '' },
-      { name: '', email: '', cnic: '', address: '' }
-    ]);
+      // ✅ Backend-compatible payload
+      const payload = {
+        category: userInfo.category,
+        subcategory: userInfo.subCategory, // match backend schema
+        amount: Number(userInfo.amount),
+        period: Number(userInfo.loanPeriod), // match backend schema
+      };
 
-    setPopupOpen(true);
+      // ✅ Submit loan request
+      const res = await axios.post(AppRoutes.loanRequest, payload, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
-  } catch (error) {
-    console.error("Error submitting loan request:", error);
-    setAlert({
-      open: true,
-      message: 'Submission failed. Please try again.',
-      severity: 'error'
-    });
-  } finally {
-    setLoading(false);
-  }
-};
+      // ✅ Submit guarantors
+      for (const g of guarantors) {
+        await axios.post(AppRoutes.guarantors, g, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      }
+
+
+
+      // Show success message
+      setAlert({
+        open: true,
+        message: 'Loan request submitted successfully!',
+        severity: 'success'
+      });
+
+      // Reset form
+      setUserInfo({
+        name: '',
+        cnic: '',
+        category: '',
+        subCategory: '',
+        loanPeriod: '',
+        amount: '',
+      });
+      setGuarantors([
+        { name: '', email: '', cnic: '', address: '' },
+        { name: '', email: '', cnic: '', address: '' }
+      ]);
+
+      setPopupOpen(true);
+
+    } catch (error) {
+      console.error("Error submitting loan request:", error);
+      setAlert({
+        open: true,
+        message: 'Submission failed. Please try again.',
+        severity: 'error'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   return (
@@ -455,15 +455,6 @@ const LoanRequestForm = () => {
       </Container>
       <SuccessPopup
         open={popupOpen}
-        onGenerateToken={async () => {
-         const token = Cookies.get("token")
-          const res = await axios.get(AppRoutes.newAppointment, {
-            headers: {Authorization: `Bearer ${token}`}
-          }) 
-
-          console.log("generated token: -- from lkoan request--", res.data)
-          setPopupOpen(false);       // close popup
-        }}
       />
     </ThemeProvider>
   );

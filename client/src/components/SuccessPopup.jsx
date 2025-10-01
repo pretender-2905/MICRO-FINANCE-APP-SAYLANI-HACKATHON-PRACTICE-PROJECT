@@ -7,10 +7,12 @@ import {
   Typography,
   Box
 } from "@mui/material";
-import { Navigate } from "react-router";
+import { useNavigate } from "react-router";
 
 
-const SuccessPopup = ({ open, onGenerateToken }) => {
+
+const SuccessPopup = ({ open}) => {
+  const navigate = useNavigate()
   return (
     <Dialog
       open={open}
@@ -36,10 +38,7 @@ const SuccessPopup = ({ open, onGenerateToken }) => {
           <Button
             variant="contained"
             color="primary"
-            onClick={()=>{
-                onGenerateToken
-                
-            }}
+            onClick={()=> navigate("/Slip")}
             sx={{ borderRadius: "10px", px: 4 }}
           >
             Generate Token

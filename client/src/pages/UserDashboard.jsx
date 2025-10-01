@@ -37,11 +37,12 @@ export default function UserDashboard() {
           Change Your Password
         </Button>
         <Button
+        onClick={()=> navigate("/loanRequestForm")}
           fullWidth
           variant="contained"
           sx={{ backgroundColor: "#6b6ed3" }}
         >
-          Google
+          Apply For Loan
         </Button>
         <Button
           fullWidth
