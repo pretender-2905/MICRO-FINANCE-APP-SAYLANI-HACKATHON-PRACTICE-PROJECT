@@ -8,8 +8,15 @@ import loanRequestRoutes from './routers/loanRequest.js'
 import newAppointmentRoutes from './routers/newAppointment.js'
 import adminRoutes from './routers/admin.js'
 
-const PORT = 4000
-const app = express()
+const PORT = process.env.PORT || 4000;
+const app = express();
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}));
+
+
+
 app.use(express.json())
 app.use(morgan('tiny'))
 
@@ -22,10 +29,7 @@ app.get("/", (req,res)=>{
     res.send("Server is runnin perfectly!")
 })
 
-app.use(cors({
-  origin: "http://localhost:5173",
-  credentials: true
-}));
+
 
 app.use("/user", usersRoutes)
 app.use("/loanRequest", loanRequestRoutes)
