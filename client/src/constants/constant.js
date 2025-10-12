@@ -1,9 +1,10 @@
 import Login from "../pages/Login"
 
 const dev_Url = "http://localhost:4000/"
-const prodUrl = ""
+const prodUrl = "https://micro-finance-app-saylani-hackathon-practice-pro-production.up.railway.app/"
 
-export const BASE_URL = dev_Url
+// export const BASE_URL = dev_Url
+export const BASE_URL = prodUrl
 
 
 export const AppRoutes = {

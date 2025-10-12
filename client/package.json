@@ -26,6 +26,7 @@
     "@toolpad/core": "^0.16.0",
     "antd": "^5.26.4",
     "axios": "^1.11.0",
+    "cors": "^2.8.5",
     "firebase": "^11.10.0",
     "flowbite": "^3.1.2",
     "framer-motion": "^12.23.12",
