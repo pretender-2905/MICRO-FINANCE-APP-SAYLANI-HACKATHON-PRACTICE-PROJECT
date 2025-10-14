@@ -44,7 +44,12 @@ router.post("/applications/:id/token", authenticateAdmin, async (req,res)=>{
   const lastAppointment = await Appointment.findOne().sort({tokenNumber: -1})
     const newToken = lastAppointment ? lastAppointment.tokenNumber + 1 : 1001
 
-    const qrData = `${process.env.BASE_URL || "http://localhost:5000"}/verify/${newToken}`;
+    const BASE_URL =
+      process.env.NODE_ENV === "production"
+        ? process.env.BASE_URL
+        : "http://localhost:4000";
+
+    const qrData = `${BASE_URL}/verify/${newToken}`;
     const qrCodeData = await QRCode.toDataURL(qrData);
 
     const updated = await Appointment.findByIdAndUpdate(req.params.id, 
