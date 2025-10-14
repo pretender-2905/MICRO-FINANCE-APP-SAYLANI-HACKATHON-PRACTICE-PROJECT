@@ -3,7 +3,7 @@ import express from "express";
 import cors from 'cors'
 import morgan from 'morgan'
 import 'dotenv/config'
-import usersRoutes from '../server/routers/user.js'
+import userRoutes from "./routers/user.js";
 import loanRequestRoutes from './routers/loanRequest.js'
 import newAppointmentRoutes from './routers/newAppointment.js'
 import adminRoutes from './routers/admin.js'
@@ -41,7 +41,7 @@ app.get("/", (req,res)=>{
 
 
 
-app.use("/user", usersRoutes)
+app.use("/user", userRoutes)
 app.use("/loanRequest", loanRequestRoutes)
 app.use("/newAppointment", newAppointmentRoutes )
 app.use("/admin", adminRoutes )
