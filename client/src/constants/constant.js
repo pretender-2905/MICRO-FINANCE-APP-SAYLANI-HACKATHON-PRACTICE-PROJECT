@@ -14,7 +14,7 @@ export const AppRoutes = {
     newAppointment: BASE_URL + "newAppointment",  //post
     loanRequest : BASE_URL + "loanRequest",  //post
     guarantors: BASE_URL + "loanRequest/guarantors", //post
-    userLoans: BASE_URL + "loanRequest/:userId/loans", //get
+    userLoans: BASE_URL + "loanRequest/user/:userId/loans", //get
     userLoanRequest : BASE_URL + "loanRequest/:id",
     allApplications: BASE_URL + "admin/applications",
     updateAppointmentDetails: BASE_URL + "admin/applications/:id",

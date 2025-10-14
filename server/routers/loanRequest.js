@@ -63,7 +63,7 @@ router.post("/guarantors", authenticateUser, async (req, res) => {
     }
 })
 
-router.get("/:userId/loans", authenticateUser, async (req,res)=>{
+router.get("/user/:userId/loans", authenticateUser, async (req,res)=>{
    try{
      const {userId} = req.params
 
