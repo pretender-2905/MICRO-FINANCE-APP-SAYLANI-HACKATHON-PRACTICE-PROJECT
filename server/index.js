@@ -22,22 +22,17 @@ app.use(cors({
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error("Not allowed by CORS"));
+      // For requests with no origin (like mobile apps or curl), you can allow them or block them.
+      // Consider blocking them in production for stricter security.
+      callback(null, true); // Or: callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
-
+// The single line below handles all preflight OPTIONS requests
 app.options("*", cors());
-
-app.options("*", cors({
-  origin: "http://localhost:5173",
-  credentials: true,
-   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-}));
 
 
 app.use(express.json())
@@ -45,11 +40,20 @@ app.use(morgan('tiny'))
 
 
 mongoose.connect(process.env.MONGODBURI)
-.then(()=>console.log("MONGO CONNECTED SUCCESSFULLY!"))
-.catch((error)=> console.log("ERROR WHILE CONNECTING SERVER TO MONGO DB! ", error))
+.then(() => console.log("MONGO CONNECTED SUCCESSFULLY!"))
+.catch((error) => console.log("Initial connection failed: ", error));
+
+// Handle errors after initial connection is established
+mongoose.connection.on('error', err => {
+  console.log('MongoDB connection error:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected');
+});
 
 app.get("/", (req,res)=>{
-    res.send("Server is runnin perfectly!")
+    res.send("Server is running perfectly!")
 })
 
 
