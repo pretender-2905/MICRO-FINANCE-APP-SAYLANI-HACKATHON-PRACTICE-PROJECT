@@ -22,17 +22,17 @@ app.use(cors({
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      // For requests with no origin (like mobile apps or curl), you can allow them or block them.
-      // Consider blocking them in production for stricter security.
-      callback(null, true); // Or: callback(new Error("Not allowed by CORS"));
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
-// The single line below handles all preflight OPTIONS requests
-app.options("*", cors());
+
+
+
+
 
 
 app.use(express.json())
