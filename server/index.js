@@ -12,23 +12,30 @@ const PORT = process.env.PORT || 4000;
 const app = express();
 
 const allowedOrigins = [
-  "http://localhost:5173",
+  "http://localhost:5173",  // Add this line
   "http://localhost:5174",
-  "https://micro-finance-app-saylani-hackathon-practice-pro-production.up.railway.app"
+  "https://micro-finance-app-saylani-hackathon-practice-pro-production.up.railway.app/"
 ];
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    // Allow requests with no origin (like mobile apps or Postman)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log('CORS blocked for origin:', origin);
       callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
 }));
+
+// Handle preflight requests for all routes
+app.options('*', cors());
 
 
 

@@ -102,8 +102,8 @@ router.post('/login', async (req, res) => {
         console.log("user=> ", user)
         sendResponse(res, 200, { user, token }, false, "User Logged in Successfully!")
     } catch (error) {
-        console.log("error=> from login", error)
-       return sendResponse(res, 500, null, true, "Something went wrong while signing in user!")
+        console.log("error=> from login", error.message)
+       return sendResponse(res, 500, null, true, error.message)
     }
 
 })
