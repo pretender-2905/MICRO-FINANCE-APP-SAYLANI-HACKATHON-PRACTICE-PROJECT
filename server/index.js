@@ -14,7 +14,7 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",  // Add this line
   "http://localhost:5174",
-  "https://micro-finance-app-saylani-hackathon-practice-pro-production.up.railway.app/"
+  "https://micro-finance-app-saylani-hackathon-practice-pro-production.up.railway.app"
 ];
 
 app.use(cors({
