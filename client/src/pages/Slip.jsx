@@ -94,14 +94,26 @@ function Slip(){
     const [haveResponse, setHaveResponse] = useState(false)
     
     const handleClickToGenerateToken = async ()=>{
-        const token = Cookies.get("token")
-        const res = await axios.post(AppRoutes.newAppointment, {
-            headers: {Authorization: `Bearer ${token}`}
-        }) 
-        console.log("token of user , response from slip page:---", res.data)
+    const token = Cookies.get("token")
+    console.log("Token from cookies:", token); // Debug line
+    
+    try {
+        const res = await axios.post(AppRoutes.newAppointment, 
+            {}, // Empty object for POST data
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        ) 
+        console.log("Response from slip page:---", res.data)
         setResponse(res?.data?.data)
         setHaveResponse(true)
+    } catch (error) {
+        console.error("Error generating token:", error)
+        // You might want to show an error message to the user here
     }
+}
 
     return(
         <Box sx={{ 
