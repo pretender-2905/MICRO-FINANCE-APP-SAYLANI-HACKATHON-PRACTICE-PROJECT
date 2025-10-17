@@ -25,9 +25,11 @@ process.on('uncaughtException', (err) => {
 });
 
 const allowedOrigins = [
-  "http://localhost:5173",
+  
   "http://localhost:5174",
-  "https://micro-finance-app-saylani-hackathon-practice-pro-production.up.railway.app"
+  "https://micro-finance-app-saylani-hackathon-practice-pro-production.up.railway.app",
+  "http://localhost:5173", // Add again for safety
+  "http://localhost:5174"  // Add again for safety
 ];
 
 app.use(cors({
