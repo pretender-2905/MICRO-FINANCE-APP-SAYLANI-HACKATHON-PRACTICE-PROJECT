@@ -11,15 +11,27 @@ import adminRoutes from './routers/admin.js'
 const PORT = process.env.PORT || 4000;
 const app = express();
 
+// Add error handlers at the top
+process.on('unhandledRejection', (err) => {
+  console.log('UNHANDLED REJECTION! 💥 Shutting down...');
+  console.log(err.name, err.message);
+  process.exit(1);
+});
+
+process.on('uncaughtException', (err) => {
+  console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
+  console.log(err.name, err.message);
+  process.exit(1);
+});
+
 const allowedOrigins = [
-  "http://localhost:5173",  // Add this line
+  "http://localhost:5173",
   "http://localhost:5174",
   "https://micro-finance-app-saylani-hackathon-practice-pro-production.up.railway.app"
 ];
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or Postman)
     if (!origin) return callback(null, true);
     
     if (allowedOrigins.includes(origin)) {
@@ -36,51 +48,60 @@ app.use(cors({
 
 // Handle preflight requests for all routes
 app.options('*', cors());
-// =-------------------------------------------------------------------------
-// Add this at the end of your main server file, before app.listen
-process.on('unhandledRejection', (err) => {
-  console.log('UNHANDLED REJECTION! 💥 Shutting down...');
-  console.log(err.name, err.message);
-  process.exit(1);
-});
-
-process.on('uncaughtException', (err) => {
-  console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
-  console.log(err.name, err.message);
-  process.exit(1);
-});
-
-// ----------------------------------------------------------------------------
-
 
 app.use(express.json())
 app.use(morgan('tiny'))
 
+// IMPROVED MONGOOSE CONNECTION WITH RETRY LOGIC
+const connectWithRetry = () => {
+  console.log('Attempting MongoDB connection...');
+  
+  mongoose.connect(process.env.MONGODBURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 30000, // 30 seconds
+    socketTimeoutMS: 45000, // 45 seconds
+    maxPoolSize: 10,
+    retryWrites: true,
+    w: 'majority'
+  })
+  .then(() => console.log("✅ MONGO CONNECTED SUCCESSFULLY!"))
+  .catch(err => {
+    console.error('❌ Failed to connect to MongoDB:', err.message);
+    console.log('🔄 Retrying connection in 5 seconds...');
+    setTimeout(connectWithRetry, 5000);
+  });
+};
 
-mongoose.connect(process.env.MONGODBURI)
-.then(() => console.log("MONGO CONNECTED SUCCESSFULLY!"))
-.catch((error) => console.log("Initial connection failed: ", error));
+// Start the connection
+connectWithRetry();
 
-// Handle errors after initial connection is established
+// Enhanced connection event handlers
 mongoose.connection.on('error', err => {
-  console.log('MongoDB connection error:', err);
+  console.log('❌ MongoDB connection error:', err.message);
 });
 
 mongoose.connection.on('disconnected', () => {
-  console.log('MongoDB disconnected');
+  console.log('⚠️ MongoDB disconnected');
 });
 
-app.get("/", (req,res)=>{
+mongoose.connection.on('connected', () => {
+  console.log('✅ MongoDB connected successfully');
+});
+
+mongoose.connection.on('reconnected', () => {
+  console.log('🔄 MongoDB reconnected');
+});
+
+// Routes
+app.get("/", (req,res) => {
     res.send("Server is running perfectly!")
 })
 
-
-
 app.use("/user", userRoutes)
 app.use("/loanRequest", loanRequestRoutes)
-app.use("/newAppointment", newAppointmentRoutes )
-app.use("/admin", adminRoutes )
-
+app.use("/newAppointment", newAppointmentRoutes)
+app.use("/admin", adminRoutes)
 
 // Handle undefined routes
 app.all('*', (req, res) => {
@@ -90,4 +111,4 @@ app.all('*', (req, res) => {
   });
 });
 
-app.listen(PORT, ()=> console.log(`The server is running on ${PORT}`))
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`))
