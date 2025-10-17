@@ -12,10 +12,10 @@ const AppointmentSchema = new Schema(
     user: { type: mongoose.Schema.Types.ObjectId, ref: "Users" },
 
     // Auto-generated token number (incremental or random)
-    tokenNumber: { type: Number, unique: true},
+    tokenNumber: { type: Number, unique: true },
 
-    appointmentDate: { type: String},
-    appointmentTime: { type: String},
+    appointmentDate: { type: String },
+    appointmentTime: { type: String },
     officeLocation: { type: String, default: "Main Branch" },
 
     qrCodeData: { type: String },
@@ -50,7 +50,7 @@ AppointmentSchema.pre("save", async function (next) {
       // 3. Generate QR code (encode token or verification URL)
       if (!this.qrCodeData) {
         this.qrCodeData = await QRCode.toDataURL(
-          `${process.env.APP_URL}/verify/${this.tokenNumber}`
+          `${process.env.BASE_URL}/verify/${this.tokenNumber}`
         );
       }
     }

@@ -82,22 +82,30 @@ router.get("/user/:userId/loans", authenticateUser, async (req,res)=>{
    }
 })
 
+// In loanRequest.js, add validation for the :id parameter
 router.get("/:id", authenticateUser, async (req, res) => {
     try {
         const { id } = req.params
+        
+        // Validate that id is a valid MongoDB ObjectId
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return sendResponse(res, 400, null, true, "Invalid loan request ID")
+        }
+        
         const loanRequest = await LoanRequest.findById(id).populate('guarantors')
         if (!loanRequest) {
-            sendResponse(res, 400, null, true, "Loan Request not found!")
+            return sendResponse(res, 404, null, true, "Loan Request not found!")
         }
-          if (req.user.role !== "admin" && loanRequest.user.toString() !== req.user._id.toString()) {
+        
+        if (req.user.role !== "admin" && loanRequest.user.toString() !== req.user._id.toString()) {
             return sendResponse(res, 403, null, true, "Not authorized to view this loan request");
         }
+        
         sendResponse(res, 200, loanRequest, false, "Loan Request fetched successfully")
     } catch (error) {
-         console.log("error while fetching loan Request! ", error)
+        console.log("error while fetching loan Request! ", error)
         sendResponse(res, 500, null, true, "Something went wrong while fetching Loan Request")
     }
 })
-
 
 export default router

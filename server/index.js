@@ -36,10 +36,21 @@ app.use(cors({
 
 // Handle preflight requests for all routes
 app.options('*', cors());
+// =-------------------------------------------------------------------------
+// Add this at the end of your main server file, before app.listen
+process.on('unhandledRejection', (err) => {
+  console.log('UNHANDLED REJECTION! 💥 Shutting down...');
+  console.log(err.name, err.message);
+  process.exit(1);
+});
 
+process.on('uncaughtException', (err) => {
+  console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
+  console.log(err.name, err.message);
+  process.exit(1);
+});
 
-
-
+// ----------------------------------------------------------------------------
 
 
 app.use(express.json())
@@ -69,5 +80,14 @@ app.use("/user", userRoutes)
 app.use("/loanRequest", loanRequestRoutes)
 app.use("/newAppointment", newAppointmentRoutes )
 app.use("/admin", adminRoutes )
+
+
+// Handle undefined routes
+app.all('*', (req, res) => {
+  res.status(404).json({
+    status: 'fail',
+    message: `Can't find ${req.originalUrl} on this server!`
+  });
+});
 
 app.listen(PORT, ()=> console.log(`The server is running on ${PORT}`))

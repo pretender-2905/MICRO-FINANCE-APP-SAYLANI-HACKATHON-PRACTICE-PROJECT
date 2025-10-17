@@ -95,7 +95,7 @@ function Slip(){
     
     const handleClickToGenerateToken = async ()=>{
         const token = Cookies.get("token")
-        const res = await axios.get(AppRoutes.newAppointment, {
+        const res = await axios.post(AppRoutes.newAppointment, {
             headers: {Authorization: `Bearer ${token}`}
         }) 
         console.log("token of user , response from slip page:---", res.data)
