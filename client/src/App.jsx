@@ -12,6 +12,7 @@ import Cookies from "js-cookie";
 import ChangePassword from "./pages/ChangePassword";
 import LoanRequestForm from "./pages/LoanRequestForm";
 import Slip from "./pages/Slip";
+import Dashboard from "./pages/Dashboard";
 
 
 
@@ -34,6 +35,7 @@ return(
     <Route path="/ChangePassword"  element={<ChangePassword />}/>
     <Route path="/LoanRequestForm" element={<LoanRequestForm />}/>
     <Route path="/Slip" element={<Slip />}/>
+    <Route path="/dashboard" element={<Dashboard />} />
   </Routes>
  </>
 )

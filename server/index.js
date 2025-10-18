@@ -7,6 +7,11 @@ import userRoutes from "./routers/user.js";
 import loanRequestRoutes from './routers/loanRequest.js'
 import newAppointmentRoutes from './routers/newAppointment.js'
 import adminRoutes from './routers/admin.js'
+import dotenv from 'dotenv'
+import familyRoutes from './routers/familyRoutes.js'
+import fileRoutes from './routers/fileRoutes.js'
+
+dotenv.config();
 
 const PORT = process.env.PORT || 4000;
 const app = express();
@@ -105,6 +110,9 @@ app.use("/user", userRoutes)
 app.use("/loanRequest", loanRequestRoutes)
 app.use("/newAppointment", newAppointmentRoutes)
 app.use("/admin", adminRoutes)
+app.use("/familyRoutes", familyRoutes);
+app.use("/fileRoutes", fileRoutes);
+
 
 // Handle undefined routes
 app.all('*', (req, res) => {

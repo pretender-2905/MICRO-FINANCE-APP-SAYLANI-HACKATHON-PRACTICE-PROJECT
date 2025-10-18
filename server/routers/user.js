@@ -14,13 +14,26 @@ import { authenticateUser } from "../middlewares/authentication.js";
 
 
 const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, // Use TLS
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
-    }
+    },
+    connectionTimeout: 30000, // 30 seconds
+    greetingTimeout: 30000,   // 30 seconds
+    socketTimeout: 30000      // 30 seconds
 });
 
+// Test the connection
+transporter.verify(function (error, success) {
+    if (error) {
+        console.log("Email transporter error:", error);
+    } else {
+        console.log("Email server is ready to send messages");
+    }
+});
 const registerSchema = Joi.object({
     name: Joi.string().min(3).required(),
     cnic: Joi.string().length(15).required(),
@@ -42,11 +55,12 @@ const passwordSchema = Joi.object({
 router.post('/register', async (req, res) => {
     try {
         const { value, error } = registerSchema.validate(req.body)
-        if (error) return sendResponse(res, 500, null, true, error.message)
+        if (error) return sendResponse(res, 400, null, true, error.message)
+        
         const checkUser = await User.findOne({ email: value.email, cnic: value.cnic })
-        if (checkUser) return sendResponse(res, 203, null, true, "User already registered!")
+        if (checkUser) return sendResponse(res, 400, null, true, "User already registered!")
 
-        //passwrd generation
+        // Password generation
         const password = crypto.randomBytes(6).toString("hex")
 
         const name = value.name
@@ -55,6 +69,7 @@ router.post('/register', async (req, res) => {
         const cnic = value.cnic
         const address = value.address
         const phoneNumber = value.phoneNumber
+        
         let user = new User({
             name,
             cnic,
@@ -62,10 +77,14 @@ router.post('/register', async (req, res) => {
             password: hashedPassword,
             address,
             phoneNumber
-
         });
+        
         await user.save()
-        await transporter.sendMail({
+        
+        console.log("📧 Attempting to send email to:", email);
+        
+        // Try to send email with timeout
+        const emailPromise = transporter.sendMail({
             from: `"Microfinance Loan App" <${process.env.EMAIL_USER}>`,
             to: email,
             subject: "Your Loan App Account Password",
@@ -78,11 +97,27 @@ router.post('/register', async (req, res) => {
       `
         });
 
+        // Set a timeout for email sending
+        const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('Email timeout')), 15000);
+        });
+
+        await Promise.race([emailPromise, timeoutPromise]);
+        
+        console.log("✅ Email sent successfully to:", email);
         sendResponse(res, 201, null, false, "User registered successfully and password has been sent to your G-mail")
 
     } catch (error) {
-        console.log("error from register=> ", error)
-      return  sendResponse(res, 500, null, true, "Something went wrong while reistering user!")
+        console.log("❌ Error from register:", error.message);
+        
+        // If user was created but email failed, we still want to respond successfully
+        // but log the email error
+        if (error.message.includes('Email timeout') || error.message.includes('ETIMEDOUT')) {
+            console.log("⚠️ Email failed to send, but user was created. Password:", password);
+            sendResponse(res, 201, null, false, "User registered successfully! Check your email for password (if not received, contact support)")
+        } else {
+            sendResponse(res, 500, null, true, "Something went wrong while registering user!")
+        }
     }
 })
 
