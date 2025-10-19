@@ -2,16 +2,13 @@
 import React, { useContext } from "react";
 import { Navigate, Route, Routes } from "react-router-dom"
 import Headers from "./components/Headers";
-import LandingPage from "./pages/LandingPage";
+
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
-import AdminDashboard from "./pages/AdminDashboard";
 import UserDashboard from "./pages/UserDashboard";
 import { AuthContext } from "./context/AuthContext";
 import Cookies from "js-cookie";
-import ChangePassword from "./pages/ChangePassword";
-import LoanRequestForm from "./pages/LoanRequestForm";
-import Slip from "./pages/Slip";
+
 import Dashboard from "./pages/Dashboard";
 import MemberReports from "./pages/MemberReports";
 
@@ -28,14 +25,14 @@ return(
   <Headers />
   <Routes>
     
-    <Route path="/"  element={ <LandingPage />}/>
+   
     <Route path="/login"  element={  user ? <Navigate to={"/UserDashboard"} /> :  <Login />}/>
     <Route path="/SignUp"  element={<SignUp />}/>
-    <Route path="/AdminDashboard"  element={<AdminDashboard />}/>
+  
     <Route path="/UserDashboard"  element={<UserDashboard />}/>
-    <Route path="/ChangePassword"  element={<ChangePassword />}/>
-    <Route path="/LoanRequestForm" element={<LoanRequestForm />}/>
-    <Route path="/Slip" element={<Slip />}/>
+   
+   
+    
     <Route path="/dashboard" element={<Dashboard />} />
     <Route path="/member/:id" element={<MemberReports />} />
   </Routes>
