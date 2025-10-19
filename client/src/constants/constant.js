@@ -15,5 +15,14 @@ export const AppRoutes = {
   allApplications: `${BASE_URL}/admin/applications`,
   updateAppointmentDetails: (id) => `${BASE_URL}/admin/applications/${id}`,
   generateNewQrCodeAndToken: (id) => `${BASE_URL}/admin/applications/${id}/token`,
-  getMyInfo: `${BASE_URL}/user/myInfo`
+  getMyInfo: `${BASE_URL}/user/myInfo`,
+  getAllMember: `${BASE_URL}/familyRoutes`,
+  AddAMember: `${BASE_URL}/familyRoutes`,
+  DeleteAMember: (id)=>  `${BASE_URL}/familyRoutes/${id}`,
+  
+  // ✅ Fixed: Use query parameter instead of route parameter
+  getAllReports: `${BASE_URL}/fileRoutes`, // We'll append ?familyMemberId=xxx in the component
+
+  // getAllReports: `${BASE_URL}/fileRoutes/reports`,
+  uploadReport:  `${BASE_URL}/fileRoutes/upload`
 }

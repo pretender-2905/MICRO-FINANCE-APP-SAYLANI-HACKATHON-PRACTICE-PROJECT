@@ -1,16 +1,16 @@
 import mongoose from "mongoose";
 
 const fileSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  familyMemberId: { type: mongoose.Schema.Types.ObjectId, ref: "FamilyMember" },
   originalName: String,
   cloudUrl: String,
   mimeType: String,
-  uploadedAt: { type: Date, default: Date.now },
   reportDate: Date,
-  type: String,
-  aiInsightId: { type: mongoose.Schema.Types.ObjectId, ref: "AiInsight" },
-  familyMemberId: { type: mongoose.Schema.Types.ObjectId, ref: "FamilyMember", default: null }
-
-});
+  testName: String,
+  doctor: String,
+  price: Number,
+  note: String,
+}, { timestamps: true });
 
 export default mongoose.model("File", fileSchema);

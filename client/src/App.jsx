@@ -13,6 +13,7 @@ import ChangePassword from "./pages/ChangePassword";
 import LoanRequestForm from "./pages/LoanRequestForm";
 import Slip from "./pages/Slip";
 import Dashboard from "./pages/Dashboard";
+import MemberReports from "./pages/MemberReports";
 
 
 
@@ -36,6 +37,7 @@ return(
     <Route path="/LoanRequestForm" element={<LoanRequestForm />}/>
     <Route path="/Slip" element={<Slip />}/>
     <Route path="/dashboard" element={<Dashboard />} />
+    <Route path="/member/:id" element={<MemberReports />} />
   </Routes>
  </>
 )
