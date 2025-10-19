@@ -43,7 +43,7 @@ export default function Header() {
             sx={{ fontWeight: "bold", cursor: "pointer" }}
             onClick={() => navigate("/")}
           >
-            Aasaan Zar Finance App
+            HEALTH MATE
           </Typography>
 
           {/* Desktop Menu */}
