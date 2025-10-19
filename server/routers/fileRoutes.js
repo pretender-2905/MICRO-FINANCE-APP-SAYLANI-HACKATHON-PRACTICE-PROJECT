@@ -7,13 +7,40 @@ import { authenticateUser } from "../middlewares/authentication.js";
 const router = express.Router();
 const upload = multer({ dest: "uploads/" });
 
-// ✅ Upload a file/report
+// In your backend fileRoutes.js
 router.post("/upload", authenticateUser, upload.single("file"), async (req, res) => {
   try {
+    console.log("Upload request received");
+    console.log("Request body:", req.body);
+    console.log("Request file:", req.file);
+    console.log("User ID:", req.user._id);
+    
+    if (!req.file) {
+      console.log("No file in request");
+      return res.status(400).json({
+        success: false,
+        message: "No file uploaded"
+      });
+    }
+
+    // Check if familyMemberId is provided
+    if (!req.body.familyMemberId) {
+      console.log("No familyMemberId provided");
+      return res.status(400).json({
+        success: false,
+        message: "Family member ID is required"
+      });
+    }
+
+    // Upload file to Cloudinary
+    console.log("Uploading to Cloudinary...");
     const result = await cloudinary.uploader.upload(req.file.path);
+    console.log("Cloudinary upload successful:", result.secure_url);
+
+    // Create a new File document
     const file = await File.create({
       userId: req.user._id,
-      familyMemberId: mongoose.Types.ObjectId(req.body.familyMemberId), // ✅ convert string to ObjectId
+      familyMemberId: req.body.familyMemberId,
       originalName: req.file.originalname,
       cloudUrl: result.secure_url,
       mimeType: req.file.mimetype,
@@ -23,33 +50,20 @@ router.post("/upload", authenticateUser, upload.single("file"), async (req, res)
       price: req.body.price,
       note: req.body.note,
     });
-    res.json(file);
-  } catch (err) {
-    console.error("Upload failed:", err);
-    res.status(500).json({ msg: "File upload failed" });
-  }
-});
 
-// ✅ Get all reports (optionally filter by familyMemberId)
-router.get("/", authenticateUser, async (req, res) => {
-  try {
-    const filter = { userId: req.user._id };
-    if (req.query.familyMemberId) {
-      filter.familyMemberId = req.query.familyMemberId;
-    }
+    console.log("File saved to database:", file._id);
 
-    const files = await File.find(filter).sort({ createdAt: -1 });
     res.json({
       success: true,
-      data: files,
-      count: files.length
+      message: "Report uploaded successfully",
+      file,
     });
   } catch (err) {
-    console.error("Error fetching reports:", err);
-    res.status(500).json({ 
+    console.error("Upload error details:", err);
+    res.status(500).json({
       success: false,
-      message: "Failed to fetch reports",
-      error: err.message 
+      message: "File upload failed",
+      error: err.message,
     });
   }
 });
