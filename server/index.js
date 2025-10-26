@@ -13,7 +13,7 @@ import fileRoutes from './routers/fileRoutes.js'
 
 dotenv.config();
 
-const PORT = process.env.PORT || 4000;
+const PORT =  4000;
 const app = express();
 
 // Add error handlers at the top
